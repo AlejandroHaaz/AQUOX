@@ -40,7 +40,6 @@ def register(): #inmediatamente se pone la función que se rebe ejecutar tras po
         return jsonify({"msg": "Ese usuario ya existe"}), 400 
      
     hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-    
 
     result = mongo.db.users.insert_one({
         "username":username, 
@@ -79,7 +78,7 @@ def create_sistema():
     #Obtener la identidad del usuario a partir del JWT
     user_id = get_jwt_identity()
     
-     #Verificar si el código del sistema ya está registrado por el mismo usuario
+    #Verificar si el código del sistema ya está registrado por el mismo usuario
     if mongo.db.sistemas.find_one({"codigo_sistema": codigo_sistema, "user_id": user_id}):
         return jsonify({"msg": "Ya has registrado este sistema anteriormente"}), 400
 
@@ -149,9 +148,6 @@ def delete_sistema(codigo_sistema):
         return jsonify({"msg": "Sistema eliminado con éxito"}), 200
     else:
         return jsonify({"msg": "No se pudo eliminar el sistema"}), 400
-
-
-
 
 #En Python, cada archivo tiene una variable especial llamada __name__.
 #Si el archivo se esta ejecutando directamente (no importado como un módulo en otro archivo),
