@@ -180,7 +180,7 @@ def get_sistema_data(codigo_sistema):
         try:
             # Autenticación usando el archivo de credenciales
             creds = Credentials.from_service_account_file(
-                'config/credentials.json',
+                'credentials.json',
                 scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
             )
             client = gspread.authorize(creds)
