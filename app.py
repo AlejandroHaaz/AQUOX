@@ -82,6 +82,7 @@ def create_sistema():
     data = request.get_json()
     titulo = data.get('titulo')
     codigo_sistema = data.get('codigo_sistema')
+    csv_link = data.get('csv_link')
 
     #Obtener la identidad del usuario a partir del JWT
     user_id = get_jwt_identity()
@@ -95,7 +96,7 @@ def create_sistema():
         "user_id": user_id,  # Relaciona el sistema con el usuario
         "titulo": titulo,
         "codigo_sistema": codigo_sistema,
-        "csv_link": ""  # Esto lo agregaremos más adelante
+        "csv_link": csv_link  
     })
 
     if result.acknowledged:
