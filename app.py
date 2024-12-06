@@ -34,7 +34,7 @@ init_db(app)
 #Definimos el endpoint para registrar un usuario
 #Utilizamos el decorador @app.route('/') para definir la ruta de la URL e inmediantament después
 #la función que se ejecutará en esa ruta
-
+# Verificar credenciales al iniciar la aplicación
 
 #Endpoint para registrar un usuario
 @app.route('/register', methods=['POST']) #ruta
@@ -158,8 +158,6 @@ def delete_sistema(codigo_sistema):
         return jsonify({"msg": "No se pudo eliminar el sistema"}), 400
     
 
-# Endpoint para obtener los datos de un sistema específico en tiempo real
-
 @app.route('/sistema/<codigo_sistema>/data', methods=['GET'])
 @jwt_required()
 def get_sistema_data(codigo_sistema):
@@ -174,13 +172,14 @@ def get_sistema_data(codigo_sistema):
     if not sistema:
         return jsonify({"msg": "Sistema no encontrado"}), 404
 
-    # Obtener el enlace de Google Sheets y cargar los datos en tiempo real
+    # Procesar el enlace de Google Sheets
     csv_link = sistema.get("csv_link")
     if csv_link:
         try:
-            # Autenticación usando el archivo de credenciales
-            creds = Credentials.from_service_account_file(
-                './config/credentials.json',
+
+             # Autenticar con las credenciales cargadas en Config
+            creds = Credentials.from_service_account_info(
+                Config.GOOGLE_APPLICATION_CREDENTIALS_JSON,
                 scopes=["https://www.googleapis.com/auth/spreadsheets.readonly"]
             )
             client = gspread.authorize(creds)
@@ -196,9 +195,12 @@ def get_sistema_data(codigo_sistema):
         except gspread.exceptions.APIError as e:
             return jsonify({"msg": "Error al obtener datos de Google Sheets", "error": str(e)}), 500
         except Exception as e:
-            return jsonify({"msg": "Ocurrió un error inesperado", "error": str(e)}), 500
+            return jsonify({"msg": "Error inesperado", "error": str(e)}), 500
 
     return jsonify(sistema), 200
+
+
+
 
 #En Python, cada archivo tiene una variable especial llamada __name__.
 #Si el archivo se esta ejecutando directamente (no importado como un módulo en otro archivo),
